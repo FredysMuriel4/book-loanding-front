@@ -4,6 +4,7 @@ import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../../../environments/environment';
 import { CaseConverterService } from '../../../utils/case-converter.service';
+import swal from 'sweetalert2';
 
 @Component({
   selector: 'app-create',
@@ -41,7 +42,13 @@ export class CreateComponent {
       this.http.get(this.apiUrl+'/students/'+this.id).subscribe(data =>{
           this.student = data;
         } , error => {
-          alert('Error al cargar el estudiante');
+
+          swal.fire(
+            'Error',
+            'Error al cargar el estudiante',
+            'error'
+          );
+          console.log(error);
         }
       );
     }
@@ -49,13 +56,38 @@ export class CreateComponent {
 
   createOrUpdateStudent(): void {
 
-    if(!this.isEditing) {
+    if(this.student.firstName == null || this.student.lastName == null || this.student.email == null || this.student.identificationNumber == null || this.student.address == null) {
 
-      this.storeStudent();
+      swal.fire(
+        'Error',
+        'Por favor complete todos los campos',
+        'error'
+      );
       return;
     }
 
-    this.updateStudent();
+    swal.fire({
+        title: '¿Estás seguro?',
+        text: "No podrás revertir esta acción!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Continuar',
+        cancelButtonText: 'Cancelar'
+      }).then((result: any) => {
+
+        if (result.isConfirmed) {
+
+          if(this.isEditing) {
+
+            this.updateStudent();
+            return;
+          }
+
+          this.storeStudent();
+        }
+      });
   }
 
   storeStudent(): void {
@@ -63,10 +95,20 @@ export class CreateComponent {
     const formattedStudent = this.caseConverter.toSnakeCase(this.student);
 
     this.http.post(this.apiUrl+'/students/save', formattedStudent).subscribe(data => {
-      alert('Estudiante creado correctamente');
+
+      swal.fire(
+        'Creado!',
+        'El estudiante ha sido creado.',
+        'success'
+      );
       location.href = '/students';
     }, error => {
-      alert('Error al crear estudiante');
+
+      swal.fire(
+        'Error',
+        'Error al crear el estudiante',
+        'error'
+      );
       console.log(error);
     });
   }
@@ -76,10 +118,20 @@ export class CreateComponent {
     const formattedStudent = this.caseConverter.toSnakeCase(this.student);
 
     this.http.put(this.apiUrl+'/students/update/'+this.id, formattedStudent).subscribe(data => {
-      alert('Estudiante actualizado correctamente');
+
+      swal.fire(
+        'Actualizado!',
+        'El estudiante ha sido actualizado.',
+        'success'
+      );
       location.href = '/students';
     }, error => {
-      alert('Error al actualizar catgoría');
+
+      swal.fire(
+        'Error',
+        'Error al actualizar el estudiante',
+        'error'
+      );
       console.log(error);
     });
   }
