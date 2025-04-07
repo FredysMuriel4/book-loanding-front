@@ -60,7 +60,7 @@ export class CreateComponent {
 
       swal.fire(
         'Error!',
-        'No se pudo encontró el estudiante con el número de cédula: '+this.query,
+        'No se encontró al estudiante con el número de cédula: '+this.query,
         'error'
       );
 
