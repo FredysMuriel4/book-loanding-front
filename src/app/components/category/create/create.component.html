@@ -1,0 +1,51 @@
+<div class="card mx-auto" style="width: 40%;">
+  <div class="card-header">
+    <div class="row">
+      <div class="col-12 d-flex align-items-center justify-content-center">
+        <h3 class="card-title" *ngIf="!isEditing"> Nueva Categoría</h3>
+        <h3 class="card-title" *ngIf="isEditing"> Editar Categoría</h3>
+      </div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="row">
+        <div class="col-12">
+          <input
+            type="text"
+            name="title"
+            class="form-control form-control-sm"
+            placeholder="Nombre de la Categoría"
+            [(ngModel)]="category.name"
+            required
+          >
+      </div>
+    </div>
+    <div class="row mt-3">
+      <div class="col-12">
+        <textarea
+          name="description"
+          class="form-control form-control-sm"
+          placeholder="Descripción de la Categoría"
+          [(ngModel)]="category.description"
+          required
+          rows="3"
+        ></textarea>
+      </div>
+    </div>
+    <div class="row mt-3">
+      <div class="col-12 d-flex align-items-end justify-content-end">
+        <button
+          class="btn btn-sm"
+          type="button"
+          (click)="createOrUpdateCategory()"
+          style="
+            background-color: #17202A !important;
+            color: #EAECEE !important;
+          "
+        >
+          Guardar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

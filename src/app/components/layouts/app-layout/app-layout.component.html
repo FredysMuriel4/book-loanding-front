@@ -1,0 +1,33 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light p-3" style="background-color: #17202A !important;">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/">
+      <img src="logo.png" width="40">
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+      <ul class="navbar-nav d-flex flex-row gap-4">
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/categories']" style="color:#EAECEE;" title="Categorías">Categorías</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/books']" style="color:#EAECEE;" title="Libros">Libros</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/students']" style="color:#EAECEE;" title="Estudiantes">Estudiantes</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/loans']" style="color:#EAECEE;" title="Préstamos">Préstamos</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container mt-5">
+  <router-outlet></router-outlet>
+</div>
+

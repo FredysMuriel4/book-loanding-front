@@ -1,0 +1,88 @@
+<div class="card mx-auto" style="width: 40%;">
+  <div class="card-header">
+    <div class="row">
+      <div class="col-12 d-flex align-items-center justify-content-center">
+        <h3 class="card-title" *ngIf="!isEditing"> Nuevo Estudiante </h3>
+        <h3 class="card-title" *ngIf="isEditing"> Editar Estudiante </h3>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-body">
+    <div class="row">
+      <div class="col-12">
+        <input
+          type="text"
+          name="title"
+          class="form-control form-control-sm"
+          placeholder="Primer nombre"
+          [(ngModel)]="student.firstName"
+          required
+        >
+      </div>
+    </div>
+    <div class="row mt-3">
+      <div class="col-12">
+        <input
+          type="text"
+          name="title"
+          class="form-control form-control-sm"
+          placeholder="Apellidos"
+          [(ngModel)]="student.lastName"
+          required
+        >
+      </div>
+    </div>
+    <div class="row mt-3">
+      <div class="col-12">
+        <input
+          type="text"
+          name="title"
+          class="form-control form-control-sm"
+          placeholder="Número de documento"
+          [(ngModel)]="student.identificationNumber"
+          required
+        >
+      </div>
+    </div>
+    <div class="row mt-3">
+      <div class="col-12">
+        <input
+          type="email"
+          name="title"
+          class="form-control form-control-sm"
+          placeholder="Correo electrónico"
+          [(ngModel)]="student.email"
+          required
+        >
+      </div>
+    </div>
+    <div class="row mt-3">
+      <div class="col-12">
+        <input
+          type="text"
+          name="title"
+          class="form-control form-control-sm"
+          placeholder="Dirección de residencia"
+          [(ngModel)]="student.address"
+          required
+        >
+      </div>
+    </div>
+    <div class="row mt-3">
+      <div class="col-12 d-flex align-items-end justify-content-end">
+        <button
+          class="btn btn-sm"
+          type="button"
+          (click)="createOrUpdateStudent()"
+          style="
+            background-color: #17202A !important;
+            color: #EAECEE !important;
+          "
+        >
+          Guardar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,147 @@
+<div class="card mx-auto" style="width: 70%;">
+  <div class="card-header">
+    <div class="row">
+      <div class="col-12 d-flex align-items-center justify-content-center">
+        <h3 class="card-title" *ngIf="!isEditing"> Nuevo Libro</h3>
+        <h3 class="card-title" *ngIf="isEditing"> Editar Libro</h3>
+      </div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-6">
+        <div class="row">
+          <div class="col-12">
+            <input
+              type="text"
+              name="title"
+              class="form-control form-control-sm"
+              placeholder="Título del libro"
+              [(ngModel)]="book.title"
+              required
+            >
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-12">
+            <input
+              type="text"
+              name="author"
+              class="form-control form-control-sm"
+              placeholder="Autor del libro"
+              [(ngModel)]="book.author"
+              required
+            >
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-12">
+            <input
+              type="text"
+              name="title"
+              class="form-control form-control-sm"
+              placeholder="Url de la miniatura del libro"
+              [(ngModel)]="book.imageUrl"
+              required
+            >
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-12">
+            <input
+              type="number"
+              name="title"
+              class="form-control form-control-sm"
+              placeholder="Stock del libro"
+              [(ngModel)]="book.stock"
+              required
+            >
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-12">
+            <textarea
+              name="description"
+              class="form-control form-control-sm"
+              placeholder="Descripción del libro"
+              [(ngModel)]="book.description"
+              required
+              rows="3"
+            ></textarea>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-12">
+            <button
+              class="btn btn-sm"
+              type="button"
+              (click)="createOrUpdateBook()"
+              style="
+                background-color: #17202A !important;
+                color: #EAECEE !important;
+              "
+            >
+              Guardar
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="row">
+          <div class="input-group mb-3">
+            <select
+              name="categories"
+              id="categories"
+              class="form-control form-control-sm"
+              [(ngModel)]="selectedCategory"
+            >
+            <option [ngValue]="null" disabled selected>Seleccione</option>
+              <option
+                *ngFor="let category of categories;"
+                value="{{category.id}}"
+              >
+                {{category.name}}
+              </option>
+            </select>
+            <button
+              class="btn"
+              type="button"
+              (click)="addCategory()"
+              style="
+                background-color: #17202A !important;
+                color: #EAECEE !important;
+              "
+            >
+              <i class="fad fa-plus"></i>
+            </button>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-md-12">
+            <table class="table table-striped table-hover">
+              <thead>
+                <tr>
+                  <th scope="col">Categoría</th>
+                  <th scope="col">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let category of book.categories">
+                  <td>{{ category.name }}</td>
+                  <td class="text-center">
+                    <button
+                      class="btn btn-danger btn-sm"
+                      (click)="deleteCategory(category.id)"
+                    >
+                      <i class="fad fa-trash"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
