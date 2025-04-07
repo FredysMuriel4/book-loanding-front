@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../../../environments/environment';
+import swal from 'sweetalert2';
 
 @Component({
   selector: 'app-create',
@@ -40,11 +41,17 @@ export class CreateComponent {
       this.id = url.split('/').pop();
 
       this.http.get(this.apiUrl+'/books/'+this.id).subscribe(data =>{
-          this.book = data;
-        } , error => {
-          alert('Error al cargar el libro');
-        }
-      );
+
+        this.book = data;
+      } , error => {
+
+        swal.fire(
+          'Error',
+          'Error al cargar el libro',
+          'error'
+        );
+        console.log(error);
+      });
     }
 
     this.http.get<any[]>(this.apiUrl+'/categories').subscribe(data => {
@@ -64,7 +71,12 @@ export class CreateComponent {
       if (category) {
         const exists = this.book.categories.find((cat:any) => cat.id == category.id);
         if (exists) {
-          alert('La categoria ya existe en el libro');
+
+          swal.fire(
+            'Error',
+            'La categoria ya existe en el libro!',
+            'error'
+          );
           return;
         }
         this.book.categories.push(category);
@@ -89,25 +101,52 @@ export class CreateComponent {
 
     if (this.book.title && this.book.author && this.book.stock && this.book.image_url && this.book.description && this.book.categories.length > 0) {
 
-      if(this.isEditing) {
-
-        this.update();
-      } else {
-
-        this.store();
-      }
+      swal.fire({
+        title: '¿Estás seguro?',
+        text: "No podrás revertir esta acción!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Continuar',
+        cancelButtonText: 'Cancelar'
+      }).then((result: any) => {
+        if (result.isConfirmed) {
+          if(this.isEditing) {
+            this.update();
+            return;
+          }
+          this.store();
+        }
+      });
     } else {
-      alert('Por favor completa todos los campos');
+      swal.fire(
+        'Error',
+        'Por favor completa todos los campos!',
+        'error'
+      );
+      return;
     }
   }
 
   store(): void {
 
     this.http.post(this.apiUrl+'/books/save', this.book).subscribe(data => {
-      alert('Libro creado correctamente');
+
+      swal.fire(
+        'Creado!',
+        'El libro ha sido creado.',
+        'success'
+      );
+
       location.href = '/books';
     }, error => {
-      alert('Error al crear el libro');
+
+      swal.fire(
+        'Error',
+        'Error al crear el libro',
+        'error'
+      );
       console.log(error);
     });
   }
@@ -115,10 +154,21 @@ export class CreateComponent {
   update(): void {
 
     this.http.put(this.apiUrl+'/books/update/'+this.id, this.book).subscribe(data => {
-      alert('Libro actualizado correctamente');
+
+      swal.fire(
+        'Actualizado!',
+        'El libro ha sido actualizado.',
+        'success'
+      );
+
       location.href = '/books';
     }, error => {
-      alert('Error al actualizar el libro');
+
+      swal.fire(
+        'Error',
+        'Error al actualizar el libro',
+        'error'
+      );
       console.log(error);
     });
     return;

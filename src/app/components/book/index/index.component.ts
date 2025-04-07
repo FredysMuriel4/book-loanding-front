@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { environment } from '../../../../environments/environment';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import swal from 'sweetalert2';
 
 @Component({
   selector: 'app-index',
@@ -30,11 +31,39 @@ export class IndexComponent {
 
   deleteBook(id: number): void {
 
+    swal.fire({
+      title: '¿Estás seguro?',
+      text: "No podrás revertir esta acción!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, eliminar!',
+      cancelButtonText: 'No, cancelar!'
+    }).then((result: any) => {
+      if (result.isConfirmed) {
+        this.delete(id);
+      }
+    });
+  }
+
+  delete(id: number): void {
+
     this.http.delete(this.apiUrl+'/books/delete/'+id, { responseType: 'text' }).subscribe(() => {
+
       this.ngOnInit();
-      alert('Book deleted successfully!');
+      swal.fire(
+        'Eliminado!',
+        'El libro ha sido eliminado.',
+        'success'
+      );
     }, error => {
-      alert('Error deleting book: ' + error.message);
+      swal.fire(
+        'Error!',
+        'No se pudo eliminar el libro.',
+        'error'
+      );
+      console.error('Error deleting book:', error);
     });
   }
 
