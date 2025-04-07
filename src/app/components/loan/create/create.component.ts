@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { environment } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { CaseConverterService } from '../../../utils/case-converter.service';
+import swal from 'sweetalert2';
 
 @Component({
   selector: 'app-create',
@@ -57,7 +58,12 @@ export class CreateComponent {
 
     if(!student) {
 
-      alert('No se encontró el estudiante con el número de identificación: ' + this.query);
+      swal.fire(
+        'Error!',
+        'No se pudo encontró el estudiante con el número de cédula: '+this.query,
+        'error'
+      );
+
       this.student = {
         id: '',
         identificationNumber: '',
@@ -114,7 +120,12 @@ export class CreateComponent {
     });
 
     if(quantity > book.stock) {
-      alert('No hay suficiente stock del libro: ' + book.title);
+
+      swal.fire(
+        'Error!',
+        'No hay suficiente stock del libro: '+ book.title,
+        'error'
+      );
       this.quantity = 1;
       return false;
     }
@@ -146,16 +157,51 @@ export class CreateComponent {
       items: items
     };
 
-    this.store(data);
+    if(data.student_id == null || data.items.length == 0 || data.loan_date == null || data.tentative_date == null) {
+
+      swal.fire(
+        'Error',
+        'Por favor complete todos los campos',
+        'error'
+      );
+      return;
+    }
+
+    swal.fire({
+      title: '¿Estás seguro?',
+      text: "No podrás revertir esta acción!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Continuar',
+      cancelButtonText: 'Cancelar'
+    }).then((result: any) => {
+
+      if (result.isConfirmed) {
+
+        this.store(data);
+      }
+    });
   }
 
   store(loan: Object): void {
 
     this.http.post(this.apiUrl+'/loans/save', loan).subscribe(data => {
-      alert('Préstamo registrado correctamente');
+
+      swal.fire(
+        'Correcto!',
+        'Préstamo registrado de forma correcta',
+        'success'
+      );
       location.href = '/loans';
     }, error => {
-      alert('Error al crear el libro');
+
+      swal.fire(
+        'Error!',
+        'Error al registrar el préstamo.',
+        'error'
+      );
       console.log(error);
     });
   }

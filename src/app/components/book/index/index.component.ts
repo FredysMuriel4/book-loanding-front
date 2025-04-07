@@ -58,6 +58,7 @@ export class IndexComponent {
         'success'
       );
     }, error => {
+
       swal.fire(
         'Error!',
         'No se pudo eliminar el libro.',

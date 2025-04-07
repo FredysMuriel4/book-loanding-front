@@ -120,6 +120,7 @@ export class CreateComponent {
         }
       });
     } else {
+
       swal.fire(
         'Error',
         'Por favor completa todos los campos!',
