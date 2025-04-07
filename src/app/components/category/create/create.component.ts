@@ -3,6 +3,7 @@ import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
+import swal from 'sweetalert2';
 
 @Component({
   selector: 'app-create',
@@ -35,7 +36,12 @@ export class CreateComponent {
       this.http.get(this.apiUrl+'/categories/'+this.id).subscribe(data =>{
           this.category = data;
         } , error => {
-          alert('Error al cargar la categoría');
+          console.log(error);
+          swal.fire(
+            'Error',
+            'Error al cargar la categoría',
+            'error'
+          );
         }
       );
     }
@@ -43,22 +49,44 @@ export class CreateComponent {
 
   createOrUpdateCategory(): void {
 
-    if(!this.isEditing) {
-
-      this.storeCategory();
-      return;
-    }
-
-    this.updateCategory();
+    swal.fire({
+      title: '¿Estás seguro?',
+      text: "No podrás revertir esta acción!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Continuar',
+      cancelButtonText: 'Cancelar'
+    }).then((result: any) => {
+      if (result.isConfirmed) {
+        if(this.isEditing) {
+          this.updateCategory();
+          return;
+        }
+        this.storeCategory();
+      }
+    });
   }
 
   storeCategory(): void {
 
     this.http.post(this.apiUrl+'/categories/save', this.category).subscribe(data => {
-      alert('Categoría creada correctamente');
+
+      swal.fire(
+        'Creado!',
+        'La categoría ha sido creada.',
+        'success'
+      );
+
       location.href = '/categories';
     }, error => {
-      alert('Error al crear categoría');
+
+      swal.fire(
+        'Error',
+        'Error al crear la categoría',
+        'error'
+      );
       console.log(error);
     });
   }
@@ -66,10 +94,21 @@ export class CreateComponent {
   updateCategory(): void {
 
     this.http.put(this.apiUrl+'/categories/update/'+this.id, this.category).subscribe(data => {
-      alert('Categoria actualizada correctamente');
+
+      swal.fire(
+        'Actualizado!',
+        'La categoría ha sido actualizada.',
+        'success'
+      );
+
       location.href = '/categories';
     }, error => {
-      alert('Error al actualizar catgoría');
+
+      swal.fire(
+        'Error',
+        'Error al actualizar la categoría',
+        'error'
+      );
       console.log(error);
     });
   }

@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { environment } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
+import swal from 'sweetalert2';
 
 
 @Component({
@@ -31,11 +32,40 @@ export class IndexComponent {
 
   deleteCategory(id: number): void {
 
+    swal.fire({
+      title: '¿Estás seguro?',
+      text: "No podrás revertir esta acción!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, eliminar!',
+      cancelButtonText: 'No, cancelar!'
+    }).then((result: any) => {
+      if (result.isConfirmed) {
+        this.delete(id);
+      }
+    });
+  }
+
+  delete(id: number): void {
+
     this.http.delete(this.apiUrl+'/categories/delete/'+id, { responseType: 'text' }).subscribe(() => {
       this.ngOnInit();
-      alert('Category deleted successfully!');
+
+      swal.fire(
+        'Eliminado!',
+        'La categoría ha sido eliminada.',
+        'success'
+      );
     }, error => {
-      alert('Error deleting book: ' + error.message);
+
+      console.error('Error deleting category:', error);
+      swal.fire(
+        'Error!',
+        'No se pudo eliminar la categoría.',
+        'error'
+      );
     });
   }
 
