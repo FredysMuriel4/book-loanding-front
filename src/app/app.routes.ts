@@ -27,6 +27,11 @@ export const routes: Routes = [
           import('./components/book/create/create.component').then(m => m.CreateComponent)
       },
       {
+        path: 'books/detail/:id',
+        loadComponent: () =>
+          import('./components/book/detail/detail.component').then(m => m.DetailComponent)
+      },
+      {
         path: 'categories',
         loadComponent: () =>
           import('./components/category/index/index.component').then(m => m.IndexComponent)

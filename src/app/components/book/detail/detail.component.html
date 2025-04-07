@@ -1,0 +1,56 @@
+<div class="card mx-auto" style="width: 80%;">
+  <div class="card-body">
+    <div class="row">
+      <div class="col-6">
+        <div class="row">
+          <div class="col-12 d-flex align-items-center justify-content-center">
+            <h1>{{ book.title }}</h1>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-12">
+            <h5> Autor: </h5>
+            <span>{{ book.author }}</span>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-12">
+            <h5> Descripción: </h5>
+            <span>{{ book.description }}</span>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-12">
+            <h5> Categorías: </h5>
+            <ng-container *ngFor="let category of book.categories; let last = last">
+              {{ category.name }}<span *ngIf="!last">, </span>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+      <div class="col-6">
+        <img
+          [src]="book.imageUrl"
+          class="card-img-top"
+          [alt]="book.title"
+          style="width: 70%; object-fit: cover;"
+        >
+      </div>
+    </div>
+  </div>
+  <div class="card-footer">
+    <div class="row">
+      <div class="col-12 d-flex align-items-center justify-content-center">
+        <a
+          [routerLink]="['/books']"
+          type="button"
+          class="btn"
+          style="background-color: #17202A !important; border: none;
+            color: #EAECEE !important;"
+        >
+          Ver todos los libros
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

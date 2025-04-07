@@ -58,6 +58,13 @@
               </td>
               <td>
                 <a
+                  [routerLink]="['/books/detail/', book.id]"
+                  class="btn btn-sm btn-secondary "
+                >
+                  <i class="fad fa-eye"></i>
+                </a>
+                &nbsp;
+                <a
                   [routerLink]="['/books/edit', book.id]"
                   class="btn btn-sm btn-primary"
                 >

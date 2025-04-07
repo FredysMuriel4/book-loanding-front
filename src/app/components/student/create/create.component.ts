@@ -39,7 +39,6 @@ export class CreateComponent {
       this.id = url.split('/').pop();
 
       this.http.get(this.apiUrl+'/students/'+this.id).subscribe(data =>{
-          console.log(data);
           this.student = data;
         } , error => {
           alert('Error al cargar el estudiante');
