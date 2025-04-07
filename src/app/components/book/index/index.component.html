@@ -30,6 +30,7 @@
               <th scope="col">Título</th>
               <th scope="col">Autor</th>
               <th scope="col">Categoría</th>
+              <th scope="col">Stock</th>
               <th scope="col">Descripción</th>
               <th scope="col">Miniatura</th>
               <th scope="col"></th>
@@ -50,6 +51,7 @@
                   {{ category.name }}<span *ngIf="!last">, </span>
                 </ng-container>
               </td>
+              <td>{{ book.stock }}</td>
               <td>{{ book.description }}</td>
               <td>
                 <img src="{{ book.imageUrl }}" width="50">

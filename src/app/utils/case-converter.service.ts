@@ -32,4 +32,10 @@ export class CaseConverterService {
     }
     return obj;
   }
+
+  formatDate(date: any): any {
+
+    const dateArr = date.split('-')
+    return dateArr[2]+"/"+dateArr[1]+"/"+dateArr[0];
+  }
 }

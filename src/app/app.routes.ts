@@ -66,6 +66,11 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./components/loan/create/create.component').then(m => m.CreateComponent)
       },
+      {
+        path: 'loans/edit/:id',
+        loadComponent: () =>
+          import('./components/loan/create/create.component').then(m => m.CreateComponent)
+      },
     ],
   },
 ];

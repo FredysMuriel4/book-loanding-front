@@ -18,4 +18,71 @@
       </div>
     </div>
   </div>
+
+  <div class="card-body">
+    <div class="row mt-4">
+      <div class="col-12">
+        <table
+          class="table table-striped table-hover"
+        >
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Estudiante</th>
+              <th scope="col">Libros</th>
+              <th scope="col">Fecha Préstamo</th>
+              <th scope="col">Fecha Devolución</th>
+              <th scope="col">Fecha Tentativa</th>
+              <th scope="col">Estado</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngIf="loans.length === 0">
+              <td colspan="7" class="text-center">
+                <h5>No hay libros registrados!</h5>
+              </td>
+            </tr>
+            <tr *ngFor="let loan of loans; let i = index">
+              <th scope="row">{{ loan.id }}</th>
+              <td>{{ loan.student.firstName+" "+loan.student.lastName }}</td>
+              <td>
+                <ng-container *ngFor="let book of loan.books; let last = last">
+                  {{ book.title }}<span *ngIf="!last">, </span>
+                </ng-container>
+              </td>
+              <td>{{ loan.loanDate??'NO REGISTRA' }}</td>
+              <td>{{ loan.returnDate??'NO REGISTRA' }}</td>
+              <td>{{ loan.tentativeDate??'NO REGISTRA' }}</td>
+              <td>
+                <ng-container *ngIf="loan.state">
+                  <span class="badge bg-secondary">Activo</span>
+                </ng-container>
+                <ng-container *ngIf="!loan.state">
+                  <span class="badge bg-success">Devuelto</span>
+                </ng-container>
+              </td>
+              <td>
+                <ng-container *ngIf="loan.state">
+                  <button
+                    (click)="updateLoan(loan.id)"
+                    class="btn btn-sm btn-success"
+                  >
+                    <i class="fad fa-check"></i>
+                </button>
+                </ng-container>
+                &nbsp;
+                <button
+                  (click)="deleteLoan(loan.id)"
+                  class="btn btn-sm btn-danger"
+                >
+                  <i class="fad fa-trash-alt"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </div>
