@@ -39,11 +39,11 @@
           </thead>
           <tbody>
             <tr *ngIf="loans.length === 0">
-              <td colspan="7" class="text-center">
-                <h5>No hay libros registrados!</h5>
+              <td colspan="8" class="text-center">
+                <h5>No hay prestamos registrados!</h5>
               </td>
             </tr>
-            <tr *ngFor="let loan of loans; let i = index">
+            <tr *ngFor="let loan of paginatedData; let i = index">
               <th scope="row">{{ loan.id }}</th>
               <td>{{ loan.student.firstName+" "+loan.student.lastName }}</td>
               <td>
@@ -56,7 +56,7 @@
               <td>{{ loan.tentativeDate??'NO REGISTRA' }}</td>
               <td>
                 <ng-container *ngIf="loan.state">
-                  <span class="badge bg-secondary">Activo</span>
+                  <span class="badge bg-secondary">Pendiente</span>
                 </ng-container>
                 <ng-container *ngIf="!loan.state">
                   <span class="badge bg-success">Devuelto</span>
@@ -84,5 +84,14 @@
         </table>
       </div>
     </div>
+  </div>
+
+  <div class="card-footer d-flex justify-content-start">
+    <app-paginate
+      [totalItems]="loans.length"
+      [itemsPerPage]="itemsPerPage"
+      [currentPage]="currentPage"
+      (pageChange)="onPageChange($event)">
+    </app-paginate>
   </div>
 </div>

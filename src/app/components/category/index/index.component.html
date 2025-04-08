@@ -39,7 +39,7 @@
                 <h5>No hay categorias registradas!</h5>
               </td>
             </tr>
-            <tr *ngFor="let category of categories;">
+            <tr *ngFor="let category of paginatedData;">
               <th scope="row">{{ category.id }}</th>
               <td>{{ category.name }}</td>
               <td>{{ category.description }}</td>
@@ -63,5 +63,14 @@
         </table>
       </div>
     </div>
+  </div>
+
+  <div class="card-footer d-flex justify-content-start">
+    <app-paginate
+      [totalItems]="categories.length"
+      [itemsPerPage]="itemsPerPage"
+      [currentPage]="currentPage"
+      (pageChange)="onPageChange($event)">
+    </app-paginate>
   </div>
 </div>

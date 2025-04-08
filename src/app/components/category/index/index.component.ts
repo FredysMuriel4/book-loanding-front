@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import { environment } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import swal from 'sweetalert2';
+import { PaginateComponent } from '../../layouts/paginate/paginate.component';
 
 
 @Component({
@@ -12,7 +13,8 @@ import swal from 'sweetalert2';
   imports: [
     FormsModule,
     CommonModule,
-    RouterModule
+    RouterModule,
+    PaginateComponent
   ],
   templateUrl: './index.component.html',
   styleUrl: './index.component.css'
@@ -20,6 +22,10 @@ import swal from 'sweetalert2';
 export class IndexComponent {
   categories: any[] = [];
   apiUrl = environment.apiUrl;
+
+  // Paginate data
+  currentPage = 1;
+  itemsPerPage = 5;
 
   private http = inject(HttpClient);
 
@@ -67,6 +73,17 @@ export class IndexComponent {
         'error'
       );
     });
+  }
+
+  get paginatedData() {
+
+    const start = (this.currentPage - 1) * this.itemsPerPage;
+    return this.categories.slice(start, start + this.itemsPerPage);
+  }
+
+  onPageChange(page: number) {
+
+    this.currentPage = page;
   }
 
 }

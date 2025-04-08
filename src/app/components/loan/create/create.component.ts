@@ -5,12 +5,14 @@ import { environment } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { CaseConverterService } from '../../../utils/case-converter.service';
 import swal from 'sweetalert2';
+import { PaginateComponent } from '../../layouts/paginate/paginate.component';
 
 @Component({
   selector: 'app-create',
   imports: [
     FormsModule,
     CommonModule,
+    PaginateComponent
   ],
   templateUrl: './create.component.html',
   styleUrl: './create.component.css'
@@ -32,6 +34,10 @@ export class CreateComponent {
   quantity: number = 1;
   currentDate: any;
   tentativeDate: any;
+
+  // Paginate data
+  currentPage = 1;
+  itemsPerPage = 3;
 
   private http = inject(HttpClient);
 
@@ -204,5 +210,16 @@ export class CreateComponent {
       );
       console.log(error);
     });
+  }
+
+  get paginatedData() {
+
+    const start = (this.currentPage - 1) * this.itemsPerPage;
+    return this.selectedBooks.slice(start, start + this.itemsPerPage);
+  }
+
+  onPageChange(page: number) {
+
+    this.currentPage = page;
   }
 }

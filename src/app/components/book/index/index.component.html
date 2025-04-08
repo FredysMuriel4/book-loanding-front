@@ -18,6 +18,7 @@
       </div>
     </div>
   </div>
+
   <div class="card-body">
     <div class="row mt-4">
       <div class="col-12">
@@ -42,7 +43,7 @@
                 <h5>No hay libros registrados!</h5>
               </td>
             </tr>
-            <tr *ngFor="let book of books; let i = index">
+            <tr *ngFor="let book of paginatedData; let i = index">
               <th scope="row">{{ book.id }}</th>
               <td>{{ book.title }}</td>
               <td>{{ book.author }}</td>
@@ -83,6 +84,15 @@
         </table>
       </div>
     </div>
+  </div>
+
+  <div class="card-footer d-flex justify-content-start">
+    <app-paginate
+      [totalItems]="books.length"
+      [itemsPerPage]="itemsPerPage"
+      [currentPage]="currentPage"
+      (pageChange)="onPageChange($event)">
+    </app-paginate>
   </div>
 </div>
 

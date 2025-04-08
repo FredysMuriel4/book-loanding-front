@@ -5,13 +5,15 @@ import { environment } from '../../../../environments/environment';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import swal from 'sweetalert2';
+import { PaginateComponent } from '../../layouts/paginate/paginate.component';
 
 @Component({
   selector: 'app-index',
   imports: [
     FormsModule,
     CommonModule,
-    RouterModule
+    RouterModule,
+    PaginateComponent
   ],
   templateUrl: './index.component.html',
   styleUrl: './index.component.css'
@@ -19,6 +21,10 @@ import swal from 'sweetalert2';
 export class IndexComponent {
   books: any[] = [];
   apiUrl = environment.apiUrl;
+
+  // Paginate data
+  currentPage = 1;
+  itemsPerPage = 5;
 
   private http = inject(HttpClient);
 
@@ -68,5 +74,14 @@ export class IndexComponent {
     });
   }
 
+  get paginatedData() {
 
+    const start = (this.currentPage - 1) * this.itemsPerPage;
+    return this.books.slice(start, start + this.itemsPerPage);
+  }
+
+  onPageChange(page: number) {
+
+    this.currentPage = page;
+  }
 }

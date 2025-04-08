@@ -6,13 +6,15 @@ import { environment } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { CaseConverterService } from '../../../utils/case-converter.service';
 import swal from 'sweetalert2';
+import { PaginateComponent } from '../../layouts/paginate/paginate.component';
 
 @Component({
   selector: 'app-index',
   imports: [
     FormsModule,
     CommonModule,
-    RouterModule
+    RouterModule,
+    PaginateComponent
   ],
   templateUrl: './index.component.html',
   styleUrl: './index.component.css'
@@ -20,6 +22,10 @@ import swal from 'sweetalert2';
 export class IndexComponent {
   loans: any[] = [];
   apiUrl = environment.apiUrl;
+
+  // Paginate data
+  currentPage = 1;
+  itemsPerPage = 5;
 
   private http = inject(HttpClient);
   constructor(private caseConverter: CaseConverterService) {}
@@ -64,7 +70,7 @@ export class IndexComponent {
 
       swal.fire(
         'Error!',
-        'No se pudo eliminar el libro.',
+        'No se pudo eliminar el prestamo.',
         'error'
       );
       console.log(error);
@@ -117,5 +123,16 @@ export class IndexComponent {
       );
       console.log(error);
     });
+  }
+
+  get paginatedData() {
+
+    const start = (this.currentPage - 1) * this.itemsPerPage;
+    return this.loans.slice(start, start + this.itemsPerPage);
+  }
+
+  onPageChange(page: number) {
+
+    this.currentPage = page;
   }
 }

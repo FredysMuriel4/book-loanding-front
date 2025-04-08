@@ -4,12 +4,14 @@ import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../../../environments/environment';
 import swal from 'sweetalert2';
+import { PaginateComponent } from '../../layouts/paginate/paginate.component';
 
 @Component({
   selector: 'app-create',
   imports: [
     FormsModule,
     CommonModule,
+    PaginateComponent
   ],
   templateUrl: './create.component.html',
   styleUrl: './create.component.css'
@@ -29,6 +31,10 @@ export class CreateComponent {
   selectedCategory: any = null;
   isEditing: boolean = false;
   id: any = null;
+
+  // Paginate data
+  currentPage = 1;
+  itemsPerPage = 3;
 
   private http = inject(HttpClient);
 
@@ -173,5 +179,16 @@ export class CreateComponent {
       console.log(error);
     });
     return;
+  }
+
+  get paginatedData() {
+
+    const start = (this.currentPage - 1) * this.itemsPerPage;
+    return this.book.categories.slice(start, start + this.itemsPerPage);
+  }
+
+  onPageChange(page: number) {
+
+    this.currentPage = page;
   }
 }

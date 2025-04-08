@@ -69,4 +69,13 @@
     </div>
   </div>
 
+  <div class="card-footer d-flex justify-content-start">
+    <app-paginate
+      [totalItems]="students.length"
+      [itemsPerPage]="itemsPerPage"
+      [currentPage]="currentPage"
+      (pageChange)="onPageChange($event)">
+    </app-paginate>
+  </div>
+
 </div>

@@ -168,13 +168,13 @@
             <table class="table table-striped table-hover">
               <thead>
                 <tr>
-                  <th scope="col">Categoría</th>
+                  <th scope="col">Libro</th>
                   <th scope="col">Cantidad</th>
                   <th scope="col">Acciones</th>
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let book of selectedBooks">
+                <tr *ngFor="let book of paginatedData">
                   <td>{{ book.title }}</td>
                   <td>{{ book.quantity }}</td>
                   <td class="text-center">
@@ -188,6 +188,16 @@
                 </tr>
               </tbody>
             </table>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-12 d-flex justify-content-start">
+            <app-paginate
+              [totalItems]="selectedBooks.length"
+              [itemsPerPage]="itemsPerPage"
+              [currentPage]="currentPage"
+              (pageChange)="onPageChange($event)">
+            </app-paginate>
           </div>
         </div>
       </div>
