@@ -29,8 +29,21 @@ export class IndexComponent {
 
   async ngOnInit(): Promise<void> {
 
-    const response = await axios.get(this.apiUrl+'/categories');
-    this.categories = response.data;
+    await axios.get(this.apiUrl+'/categories')
+    .then(response => {
+
+      this.categories = response.data;
+    })
+    .catch(error => {
+
+      swal.fire(
+        'Error!',
+        'No se pudieron cargar las categorías.',
+        'error'
+      );
+      console.log(error);
+    });
+
   }
 
   deleteCategory(id: number): void {

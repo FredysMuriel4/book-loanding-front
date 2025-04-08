@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { environment } from '../../../../environments/environment';
-import { HttpClient } from '@angular/common/http';
 import swal from 'sweetalert2';
 import { PaginateComponent } from '../../layouts/paginate/paginate.component';
+import axios from 'axios';
 
 @Component({
   selector: 'app-index',
@@ -26,12 +26,21 @@ export class IndexComponent {
   currentPage = 1;
   itemsPerPage = 5;
 
-  private http = inject(HttpClient);
+  async ngOnInit(): Promise<void> {
 
-  ngOnInit(): void {
+    await axios.get(this.apiUrl+'/students')
+    .then(response => {
 
-    this.http.get<any[]>(this.apiUrl+'/students').subscribe(data => {
-      this.students = data;
+      this.students = response.data;
+    })
+    .catch(error => {
+
+      swal.fire(
+        'Error!',
+        'Error al cargar los estudiantes.',
+        'error'
+      );
+      console.log(error);
     });
   }
 
@@ -53,25 +62,26 @@ export class IndexComponent {
     });
   }
 
-  delete(id: number): void {
+  async delete(id: number): Promise<void> {
 
-    this.http.delete(this.apiUrl+'/students/delete/'+id, { responseType: 'text' }).subscribe(() => {
-
-      this.ngOnInit();
+    await axios.delete(this.apiUrl+'/students/delete/'+id, { responseType: 'text' })
+    .then(() => {
 
       swal.fire(
         'Eliminado!',
-        'El usuario ha sido eliminado.',
+        'El estudiante ha sido eliminado.',
         'success'
       );
-    }, error => {
+      this.ngOnInit();
+    })
+    .catch(error => {
 
-      console.log(error);
       swal.fire(
         'Error!',
-        'No se pudo eliminar el usuario.',
+        'No se pudo eliminar el estudiante.',
         'error'
       );
+      console.log(error);
     });
   }
 

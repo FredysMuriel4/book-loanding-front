@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../../../environments/environment';
 import { CaseConverterService } from '../../../utils/case-converter.service';
 import swal from 'sweetalert2';
+import axios from 'axios';
 
 @Component({
   selector: 'app-create',
@@ -29,9 +29,7 @@ export class CreateComponent {
 
   constructor(private caseConverter: CaseConverterService) {}
 
-  private http = inject(HttpClient);
-
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
 
     const url = window.location.href;
     if (url.includes('edit')) {
@@ -39,18 +37,20 @@ export class CreateComponent {
       this.isEditing = true;
       this.id = url.split('/').pop();
 
-      this.http.get(this.apiUrl+'/students/'+this.id).subscribe(data =>{
-          this.student = data;
-        } , error => {
+      await axios.get(this.apiUrl+'/students/'+this.id)
+      .then(response => {
 
-          swal.fire(
-            'Error',
-            'Error al cargar el estudiante',
-            'error'
-          );
-          console.log(error);
-        }
-      );
+        this.student = response.data;
+      })
+      .catch(error => {
+
+        swal.fire(
+          'Error',
+          'Error al cargar el estudiante',
+          'error'
+        );
+        console.log(error);
+      });
     }
   }
 
@@ -90,11 +90,12 @@ export class CreateComponent {
       });
   }
 
-  storeStudent(): void {
+  async storeStudent(): Promise<void> {
 
     const formattedStudent = this.caseConverter.toSnakeCase(this.student);
 
-    this.http.post(this.apiUrl+'/students/save', formattedStudent).subscribe(data => {
+    await axios.post(this.apiUrl+'/students/save', formattedStudent)
+    .then(() => {
 
       swal.fire(
         'Creado!',
@@ -102,7 +103,8 @@ export class CreateComponent {
         'success'
       );
       location.href = '/students';
-    }, error => {
+    })
+    .catch(error => {
 
       swal.fire(
         'Error',
@@ -113,11 +115,12 @@ export class CreateComponent {
     });
   }
 
-  updateStudent(): void {
+  async updateStudent(): Promise<void> {
 
     const formattedStudent = this.caseConverter.toSnakeCase(this.student);
 
-    this.http.put(this.apiUrl+'/students/update/'+this.id, formattedStudent).subscribe(data => {
+    await axios.put(this.apiUrl+'/students/update/'+this.id, formattedStudent)
+    .then(() => {
 
       swal.fire(
         'Actualizado!',
@@ -125,7 +128,8 @@ export class CreateComponent {
         'success'
       );
       location.href = '/students';
-    }, error => {
+    })
+    .catch(error => {
 
       swal.fire(
         'Error',
