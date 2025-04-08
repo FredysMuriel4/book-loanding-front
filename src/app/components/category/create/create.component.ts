@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../../../environments/environment';
-import { HttpClient } from '@angular/common/http';
 import swal from 'sweetalert2';
+import axios from 'axios';
 
 @Component({
   selector: 'app-create',
@@ -23,9 +23,7 @@ export class CreateComponent {
   isEditing: boolean = false;
   id: any = null;
 
-  private http = inject(HttpClient);
-
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
 
     const url = window.location.href;
     if (url.includes('edit')) {
@@ -33,17 +31,20 @@ export class CreateComponent {
       this.isEditing = true;
       this.id = url.split('/').pop();
 
-      this.http.get(this.apiUrl+'/categories/'+this.id).subscribe(data =>{
-          this.category = data;
-        } , error => {
-          console.log(error);
-          swal.fire(
-            'Error',
-            'Error al cargar la categoría',
-            'error'
-          );
-        }
-      );
+      await axios.get(this.apiUrl+'/categories/'+this.id)
+      .then(response => {
+
+        this.category = response.data;
+      })
+      .catch(error =>  {
+
+        swal.fire(
+          'Error',
+          'Error al cargar la categoría',
+          'error'
+        );
+        console.log(error);
+      });
     }
   }
 
@@ -69,18 +70,19 @@ export class CreateComponent {
     });
   }
 
-  storeCategory(): void {
+  async storeCategory(): Promise<void> {
 
-    this.http.post(this.apiUrl+'/categories/save', this.category).subscribe(data => {
+    await axios.post(this.apiUrl+'/categories/save', this.category)
+    .then(response => {
 
       swal.fire(
         'Creado!',
         'La categoría ha sido creada.',
         'success'
       );
-
       location.href = '/categories';
-    }, error => {
+    })
+    .catch(error => {
 
       swal.fire(
         'Error',
@@ -91,18 +93,19 @@ export class CreateComponent {
     });
   }
 
-  updateCategory(): void {
+  async updateCategory(): Promise<void> {
 
-    this.http.put(this.apiUrl+'/categories/update/'+this.id, this.category).subscribe(data => {
+    await axios.put(this.apiUrl+'/categories/update/'+this.id, this.category)
+    .then(response => {
 
       swal.fire(
         'Actualizado!',
         'La categoría ha sido actualizada.',
         'success'
       );
-
       location.href = '/categories';
-    }, error => {
+    })
+    .catch(error => {
 
       swal.fire(
         'Error',

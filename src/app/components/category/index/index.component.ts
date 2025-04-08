@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { environment } from '../../../../environments/environment';
-import { HttpClient } from '@angular/common/http';
 import swal from 'sweetalert2';
 import { PaginateComponent } from '../../layouts/paginate/paginate.component';
+import axios from 'axios';
 
 
 @Component({
@@ -27,13 +27,10 @@ export class IndexComponent {
   currentPage = 1;
   itemsPerPage = 5;
 
-  private http = inject(HttpClient);
+  async ngOnInit(): Promise<void> {
 
-  ngOnInit(): void {
-
-    this.http.get<any[]>(this.apiUrl+'/categories').subscribe(data => {
-      this.categories = data;
-    });
+    const response = await axios.get(this.apiUrl+'/categories');
+    this.categories = response.data;
   }
 
   deleteCategory(id: number): void {
@@ -54,24 +51,25 @@ export class IndexComponent {
     });
   }
 
-  delete(id: number): void {
+  async delete(id: number): Promise<void> {
 
-    this.http.delete(this.apiUrl+'/categories/delete/'+id, { responseType: 'text' }).subscribe(() => {
+    await axios.delete(this.apiUrl+'/categories/delete/'+id).then(response => {
+
       this.ngOnInit();
-
       swal.fire(
         'Eliminado!',
         'La categoría ha sido eliminada.',
         'success'
       );
-    }, error => {
+    })
+    .catch(error => {
 
-      console.error('Error deleting category:', error);
       swal.fire(
         'Error!',
         'No se pudo eliminar la categoría.',
         'error'
       );
+      console.log(error);
     });
   }
 
