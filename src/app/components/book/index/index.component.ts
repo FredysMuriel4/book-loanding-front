@@ -1,11 +1,11 @@
-import { Component, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../../../environments/environment';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import swal from 'sweetalert2';
 import { PaginateComponent } from '../../layouts/paginate/paginate.component';
+import axios from 'axios';
 
 @Component({
   selector: 'app-index',
@@ -26,12 +26,21 @@ export class IndexComponent {
   currentPage = 1;
   itemsPerPage = 5;
 
-  private http = inject(HttpClient);
+  async ngOnInit(): Promise<void> {
 
-  ngOnInit(): void {
+    await axios.get(this.apiUrl+'/books')
+    .then(response => {
 
-    this.http.get<any[]>(this.apiUrl+'/books').subscribe(data => {
-      this.books = data;
+      this.books = response.data;
+    })
+    .catch(error => {
+
+      swal.fire(
+        'Error!',
+        'No se pudo obtener los libros.',
+        'error'
+      );
+      console.error(error);
     });
   }
 
@@ -53,17 +62,19 @@ export class IndexComponent {
     });
   }
 
-  delete(id: number): void {
+  async delete(id: number): Promise<void> {
 
-    this.http.delete(this.apiUrl+'/books/delete/'+id, { responseType: 'text' }).subscribe(() => {
+    await axios.delete(this.apiUrl+'/books/delete/'+id)
+    .then(() => {
 
-      this.ngOnInit();
       swal.fire(
         'Eliminado!',
         'El libro ha sido eliminado.',
         'success'
       );
-    }, error => {
+      this.ngOnInit();
+    })
+    .catch(error => {
 
       swal.fire(
         'Error!',

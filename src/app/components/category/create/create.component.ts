@@ -73,7 +73,7 @@ export class CreateComponent {
   async storeCategory(): Promise<void> {
 
     await axios.post(this.apiUrl+'/categories/save', this.category)
-    .then(response => {
+    .then(() => {
 
       swal.fire(
         'Creado!',
@@ -96,7 +96,7 @@ export class CreateComponent {
   async updateCategory(): Promise<void> {
 
     await axios.put(this.apiUrl+'/categories/update/'+this.id, this.category)
-    .then(response => {
+    .then(() => {
 
       swal.fire(
         'Actualizado!',

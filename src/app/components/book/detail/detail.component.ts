@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Title } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import { environment } from '../../../../environments/environment';
+import axios from 'axios';
+import swal from 'sweetalert2';
 
 @Component({
   selector: 'app-detail',
@@ -25,16 +25,24 @@ export class DetailComponent {
   }
   apiUrl = environment.apiUrl;
 
-  private http = inject(HttpClient);
-
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
 
     const url = window.location.href;
     const id = url.split('/').pop();
 
-    this.http.get<any[]>(this.apiUrl+'/books/'+id).subscribe(data => {
-      this.book = data;
-      console.log(data);
+    await axios.get(this.apiUrl+'/books/'+id)
+    .then(response => {
+
+      this.book = response.data;
+    })
+    .catch(error => {
+
+      swal.fire(
+        'Error!',
+        'Error al cargar el libro.',
+        'error'
+      );
+      console.error(error);
     });
   }
 

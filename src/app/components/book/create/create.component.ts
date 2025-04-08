@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../../../environments/environment';
 import swal from 'sweetalert2';
 import { PaginateComponent } from '../../layouts/paginate/paginate.component';
+import axios from 'axios';
 
 @Component({
   selector: 'app-create',
@@ -36,9 +36,7 @@ export class CreateComponent {
   currentPage = 1;
   itemsPerPage = 3;
 
-  private http = inject(HttpClient);
-
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
 
     const url = window.location.href;
     if (url.includes('edit')) {
@@ -46,10 +44,12 @@ export class CreateComponent {
       this.isEditing = true;
       this.id = url.split('/').pop();
 
-      this.http.get(this.apiUrl+'/books/'+this.id).subscribe(data =>{
+      await axios.get(this.apiUrl+'/books/'+this.id)
+      .then(response => {
 
-        this.book = data;
-      } , error => {
+        this.book = response.data;
+      })
+      .catch(error => {
 
         swal.fire(
           'Error',
@@ -60,10 +60,20 @@ export class CreateComponent {
       });
     }
 
-    this.http.get<any[]>(this.apiUrl+'/categories').subscribe(data => {
-      this.categories = data;
-    });
+    await axios.get(this.apiUrl+'/categories')
+    .then(response => {
 
+      this.categories = response.data;
+    })
+    .catch(error => {
+
+      swal.fire(
+        'Error',
+        'La categoria ya existe en el libro!',
+        'error'
+      );
+      console.log(error);
+    });
   }
 
   addCategory(): void {
@@ -136,18 +146,19 @@ export class CreateComponent {
     }
   }
 
-  store(): void {
+  async store(): Promise<void> {
 
-    this.http.post(this.apiUrl+'/books/save', this.book).subscribe(data => {
+    await axios.post(this.apiUrl+'/books/save', this.book)
+    .then(() => {
 
       swal.fire(
         'Creado!',
         'El libro ha sido creado.',
         'success'
       );
-
       location.href = '/books';
-    }, error => {
+    })
+    .catch(error => {
 
       swal.fire(
         'Error',
@@ -158,18 +169,19 @@ export class CreateComponent {
     });
   }
 
-  update(): void {
+  async update(): Promise<void> {
 
-    this.http.put(this.apiUrl+'/books/update/'+this.id, this.book).subscribe(data => {
+    await axios.put(this.apiUrl+'/books/update/'+this.id, this.book)
+    .then(() => {
 
       swal.fire(
         'Actualizado!',
         'El libro ha sido actualizado.',
         'success'
       );
-
       location.href = '/books';
-    }, error => {
+    })
+    .catch(error => {
 
       swal.fire(
         'Error',
@@ -177,8 +189,7 @@ export class CreateComponent {
         'error'
       );
       console.log(error);
-    });
-    return;
+    })
   }
 
   get paginatedData() {
