@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { environment } from '../../../../environments/environment';
-import { HttpClient } from '@angular/common/http';
 import { CaseConverterService } from '../../../utils/case-converter.service';
 import swal from 'sweetalert2';
 import { PaginateComponent } from '../../layouts/paginate/paginate.component';
+import axios from 'axios';
 
 @Component({
   selector: 'app-index',
@@ -27,13 +27,23 @@ export class IndexComponent {
   currentPage = 1;
   itemsPerPage = 5;
 
-  private http = inject(HttpClient);
   constructor(private caseConverter: CaseConverterService) {}
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
 
-    this.http.get<any[]>(this.apiUrl+'/loans').subscribe(data => {
-      this.loans = data;
+    await axios.get(this.apiUrl+'/loans')
+    .then(response => {
+
+      this.loans = response.data;
+    })
+    .catch(error => {
+
+      swal.fire(
+        'Error!',
+        'No se cargaron los prestamos.',
+        'error'
+      );
+      console.log(error);
     });
   }
 
@@ -55,18 +65,19 @@ export class IndexComponent {
     });
   }
 
-  delete(id: number): void {
+  async delete(id: number): Promise<void> {
 
-    this.http.delete(this.apiUrl+'/loans/delete/'+id, { responseType: 'text' }).subscribe(() => {
+    await axios.delete(this.apiUrl+'/loans/delete/'+id, { responseType: 'text' })
+    .then(() => {
 
       this.ngOnInit();
-
       swal.fire(
         'Correcto!',
         'Préstamo eliminado de forma correcta!',
         'success'
       )
-    }, error => {
+    })
+    .catch(error => {
 
       swal.fire(
         'Error!',
@@ -104,9 +115,10 @@ export class IndexComponent {
     });
   }
 
-  update(id: number, data: object): void {
+  async update(id: number, data: object): Promise<void> {
 
-    this.http.put(this.apiUrl+'/loans/update/'+id, data, { responseType: 'text' }).subscribe(() => {
+    await axios.put(this.apiUrl+'/loans/update/'+id, data, { responseType: 'text' })
+    .then(() => {
 
       this.ngOnInit();
       swal.fire(
@@ -114,7 +126,8 @@ export class IndexComponent {
         'Préstamo actualizado de forma correcta.',
         'success'
       );
-    }, error => {
+    })
+    .catch(error => {
 
       swal.fire(
         'Error!',

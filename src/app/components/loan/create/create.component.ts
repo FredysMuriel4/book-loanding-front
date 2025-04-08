@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../../../environments/environment';
-import { HttpClient } from '@angular/common/http';
 import { CaseConverterService } from '../../../utils/case-converter.service';
 import swal from 'sweetalert2';
 import { PaginateComponent } from '../../layouts/paginate/paginate.component';
+import axios from 'axios';
 
 @Component({
   selector: 'app-create',
@@ -39,18 +39,38 @@ export class CreateComponent {
   currentPage = 1;
   itemsPerPage = 3;
 
-  private http = inject(HttpClient);
-
   constructor(private caseConverter: CaseConverterService) {}
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
 
-    this.http.get<any[]>(this.apiUrl+'/students').subscribe(data => {
-      this.students = data;
+    await axios.get(this.apiUrl+'/students')
+    .then(response => {
+
+      this.students = response.data;
+    })
+    .catch(error => {
+
+      swal.fire(
+        'Error!',
+        'Error al cargar estudiantes!',
+        'error'
+      );
+      console.log(error);
     });
 
-    this.http.get<any[]>(this.apiUrl+'/books').subscribe(data => {
-      this.books = data;
+    await axios.get(this.apiUrl+'/books')
+    .then(response => {
+
+      this.books = response.data;
+    })
+    .catch(error => {
+
+      swal.fire(
+        'Error!',
+        'Error al cargar libros!',
+        'error'
+      );
+      console.log(error);
     });
 
     this.currentDate = new Date().toISOString().split('T')[0];
@@ -191,9 +211,10 @@ export class CreateComponent {
     });
   }
 
-  store(loan: Object): void {
+  async store(loan: Object): Promise<void> {
 
-    this.http.post(this.apiUrl+'/loans/save', loan).subscribe(data => {
+    await axios.post(this.apiUrl+'/loans/save', loan)
+    .then(() => {
 
       swal.fire(
         'Correcto!',
@@ -201,7 +222,8 @@ export class CreateComponent {
         'success'
       );
       location.href = '/loans';
-    }, error => {
+    })
+    .catch(error => {
 
       swal.fire(
         'Error!',
